@@ -26,7 +26,7 @@ export default function PlayButton({ size = 64, onClick = () => {}, className = 
       aria-label="Play"
     >
       <div
-        className="absolute inset-0 rounded-full bg-transparent backdrop-blur-md border-2 border-white"
+        className="absolute inset-0 rounded-full bg-transparent backdrop-blur-md border-4 border-white shadow-xl"
         style={{
           boxShadow: "0 0 20px rgba(186, 230, 253, 0.5)",
         }}

@@ -29,10 +29,10 @@ const HomePage: React.FC = () => {
           className='w-3xl h-auto'  
         />
 
-        <PlayButton size={80} onClick={() => navigate('game')} className='-mt-5'/>
+        <PlayButton size={104} onClick={() => navigate('game')} className='-mt-5'/>
 
         <div className='w-1/2 flex flex-row justify-between mt-12'>
-          <Button text="Petunjuk" onClick={() => navigate('/instructions', { state: { level: 2 } })} />
+          <Button text="Petunjuk" onClick={() => navigate('/instructions')} />
           <Button text="Level 1" onClick={() => navigate('/game', { state: { level: 1 } })} />
         </div>
 
