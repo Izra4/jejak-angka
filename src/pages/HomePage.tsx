@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
           className='w-3xl h-auto'  
         />
 
-        <PlayButton size={104} onClick={() => navigate('game')} className='-mt-5'/>
+        <PlayButton size={104} onClick={() => navigate('/game', {state: {level: 1}})} className='-mt-5'/>
 
         <div className='w-1/2 flex flex-row justify-between mt-12'>
           <Button text="Petunjuk" onClick={() => navigate('/instructions')} />

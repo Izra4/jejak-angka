@@ -1,8 +1,9 @@
 export type GridPoint = { row: number; col: number };
 
+const randomRow = Math.floor(Math.random() * 10);
 export const levelPatterns: Record<number, GridPoint[]> = {
   1: [
-    ...Array.from({ length: 10 }, (_, i) => ({ row: 5, col: i })),
+    ...Array.from({ length: 10 }, (_, i) => ({ row: randomRow, col: i })),
   ],
 
   2: [

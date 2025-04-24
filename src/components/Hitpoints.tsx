@@ -6,14 +6,14 @@ interface HitpointsProps {
 
 const Hitpoints: React.FC<HitpointsProps> = ({ lives }) => {
   const hearts = Array.from({ length: lives }, (_, i) => (
-    <span key={i} className="text-red-500">
+    <span key={i} className="text-red-500 text-3xl">
       ❤️
     </span>
   ));
 
   return (
     <div className="text-lg font-semibold">
-      Hp: {hearts}
+      {hearts}
     </div>
   );
 };

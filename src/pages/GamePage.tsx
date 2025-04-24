@@ -5,6 +5,7 @@ import Hitpoints from '../components/Hitpoints';
 import PopupMessage from '../components/PopupMessage';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { levelPatterns } from '../data/patterns';
+import char from '../assets/icons/char.png';
 
 const GRID_SIZE = 10;
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
@@ -24,7 +25,7 @@ const GamePage: React.FC = () => {
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(4);
   const [selectedCoords, setSelectedCoords] = useState<{ x: number; y: number }[]>([]);
 
   useEffect(() => {
@@ -44,15 +45,21 @@ const GamePage: React.FC = () => {
     setCorrectOrder(ordered);
     setCurrentIndex(0);
     setScore(0);
-    setLives(3);
+    setLives(4);
     setSelectedCoords([]);
   }, [count, level, pattern]);
 
   useEffect(() => {
     if (currentIndex === correctOrder.length && correctOrder.length > 0) {
       setTimeout(() => {
-  
-      }, 1000);
+        navigate('/result', {
+          state: {
+            score,
+            success: true,
+            level,
+          },
+        });
+      }, 1500);
     }
   }, [currentIndex, correctOrder, navigate, score, level]);  
 
@@ -102,21 +109,8 @@ const GamePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-orange-200 p-6 flex flex-col items-center">
-      <h1 className="text-2xl font-bold text-orange-600 mb-4">
-        Level {level}: {level === 1 ? 'Garis Lurus' : level === 2 ? 'Hati' : 'Bintang'}
-      </h1>
-
-      {feedback && (
-        <PopupMessage type={feedback.type} message={feedback.message} visible={showPopup} />
-      )}
-
-      <div className="flex justify-between items-center w-full max-w-3xl mb-4">
-        <Hitpoints lives={lives} />
-        <Score score={score} />
-      </div>
-
-      <div ref={containerRef} className="relative">
+    <div className="min-h-screen bg-gradient-to-br from-blue-200 to-blue-400 p-6 flex flex-row items-center font-poppins">
+      <div ref={containerRef} className="w-3/5 relative">
         <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
           {selectedCoords.map((point, i) => {
             const next = selectedCoords[i + 1];
@@ -133,6 +127,29 @@ const GamePage: React.FC = () => {
               />
             );
           })}
+          
+            {selectedCoords.length === correctOrder.length && 
+            selectedCoords.length > 1 &&
+            selectedCoords[0] &&
+            selectedCoords[selectedCoords.length - 1] && (
+            <>
+              <line
+                x1={selectedCoords[selectedCoords.length - 1].x}
+                y1={selectedCoords[selectedCoords.length - 1].y}
+                x2={selectedCoords[0].x}
+                y2={selectedCoords[0].y}
+                stroke="red"
+                strokeWidth="4"
+              />
+              <polygon
+              points={selectedCoords
+                .map((point) => `${point.x},${point.y}`)
+                .join(' ')}
+              fill="rgba(255, 0, 0, 0.8)"
+              stroke="none"
+              />
+            </>
+            )}
         </svg>
 
         <div className="grid grid-cols-10 gap-2 relative z-10">
@@ -147,13 +164,40 @@ const GamePage: React.FC = () => {
           ))}
         </div>
       </div>
+      
+      <div className='w-2/5 flex flex-col items-start justify-start self-start h-fit'>
+        <h1 className="font-bold text-orange-600 mb-4 text-4xl">
+          Level {level}
+        </h1>
 
-      <button
-        onClick={() => navigate('/')}
-        className="mt-6 text-sm text-blue-500 hover:underline"
-      >
-        ⬅ Kembali ke Menu Utama
-      </button>
+        {feedback && (
+          <PopupMessage type={feedback.type} message={feedback.message} visible={showPopup} />
+        )}
+
+        <div className="flex justify-between items-center w-full max-w-3xl mb-4">
+          <Hitpoints lives={lives} />
+          <Score score={score} />
+        </div>
+
+        <p className='font-semibold text-2xl text-center'>
+          Yuk temukan {correctOrder.length - currentIndex} angka lagi untuk memenangkan level ini !!!
+        </p>
+        
+        <div className='w-full flex justify-center items-center'>
+          <img 
+            src={char} 
+            alt="character" 
+            className='w-72 h-72 item'  
+          />
+        </div>
+
+        <button
+          onClick={() => navigate('/')}
+          className="mt-6 text-sm text-blue-500 hover:underline"
+        >
+          ⬅ Kembali ke Menu Utama
+        </button>
+      </div>
     </div>
   );
 };
