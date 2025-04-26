@@ -2,4 +2,8 @@
 
 @theme {
     --font-poppins: Poppins, sans-serif; 
+    --color-bl-primary: #00A3D1;
+    --color-bl-secondary: #81F9FF;
+    --color-rd-primary: #9B1F29;
+    --color-rd-secondary: #E14641;
   }
