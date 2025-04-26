@@ -6,17 +6,23 @@ interface LocationState {
   score: number;
   success: boolean;
   level: number;
+  hp: number;
 }
 
 const ResultPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
+  const { score, success, level, hp } = state || { score: 0, success: false, level: 1, hp: 0 };
 
-  const { score, success, level } = state || { score: 0, success: false, level: 1 };
+  console.log("ASDASDDAS: ", hp);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-lime-200 flex flex-col items-center justify-center text-center p-6">
+    <div className={`min-h-screen font-poppins
+      ${success ? "bg-gradient-to-br from-green-100 to-lime-200" : 
+                  "bg-gradient-to-br from-white to-red-200"} 
+      flex flex-col items-center justify-center text-center p-6`}
+    >
       <h1 className={`text-4xl font-bold mb-4 ${success ? "text-green-600" : "text-red-500"}`}>
         {success ? "🎉 Yeay Kamu Berhasil!" : "😢 Kesempatanmu Habis!"}
       </h1>
@@ -39,7 +45,11 @@ const ResultPage: React.FC = () => {
                 <span>Lanjut ke Level {level + 1}</span>
               </div>
             }
-            onClick={() => navigate("/game", { state: { level: level + 1 } })}
+            onClick={() => navigate("/game", { state: { 
+              level: level + 1,
+              initScore: score,
+              hp
+            }})}
             size="w-3/4"
           />
         )}
