@@ -19,7 +19,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(
       <div
         ref={ref}
         onClick={onClick}
-        className={`w-14 h-14 flex items-center justify-center border rounded-lg cursor-pointer select-none ${bgColor} hover:scale-105 transition`}
+        className={`w-full aspect-square flex items-center justify-center border rounded-lg cursor-pointer select-none text-xs sm:text-base ${bgColor} hover:scale-105 transition`}
       >
         {number}
       </div>

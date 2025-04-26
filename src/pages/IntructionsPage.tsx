@@ -1,36 +1,43 @@
-import React from 'react';
-import Button from '../components/button/Button';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
+import ChalkBoard from "../components/ChalkBoard";
+import Character from "../components/Character";
+import SandBackground from "../components/SandBackground";
+import Button from "../components/button/Button";
 
 const InstructionsPage: React.FC = () => {
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  const handleCharClick = () => {
+    setShowPopup(true);
+    setFadeOut(false);
+    setTimeout(() => setFadeOut(true), 1500);
+    setTimeout(() => setShowPopup(false), 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-blue-100 to-purple-200 flex flex-col items-center justify-center p-6">
-      <div>
-        <div className='w-full'>
-          <h1 className="text-3xl md:text-4xl font-bold text-purple-600 mb-4">📘 Petunjuk Permainan</h1>
-        </div>
-
-        <div className="bg-white shadow-md rounded-xl p-6 text-black max-w-xl text-left space-y-4">
-          <p className="text-xl font-semibold">Cara Bermain:</p>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>Klik angka secara berurutan dimulai dari angka yang dilingkari hijau.</li>
-            <li>Lanjutkan ke angka berikutnya (contoh: 8.731 → 8.732 → 8.733).</li>
-            <li>Selesaikan hingga semua angka benar dan membentuk pola.</li>
-          </ul>
-          <p className="text-xl font-semibold">Ingat:</p>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>✅ Benar: Muncul lingkaran hijau.</li>
-            <li>❌ Salah: Muncul notifikasi untuk mencoba lagi.</li>
-            <li>✨ Semua benar: Muncul pola unik.</li>
-          </ul>
+    <div className="min-h-screen lg:h-screen bg-[#AFEEEE] flex flex-col lg:flex-row p-6 font-poppins relative overflow-hidden lg:justify-center">
+      <BackButton onClick={() => navigate("/")} />
+      <div className="w-full max-w-2xl">
+        <ChalkBoard />
+        <div className="flex justify-center items-center mt-6 lg:mt-8 z-30 relative">
+          <Button text="MAIN SEKARANG" onClick={() => navigate("/game", { state: { level: 1 } })} />
         </div>
       </div>
-      <div className="mt-10 flex flex-col gap-4 w-full max-w-xs">
-          <Button text="➤ Mulai Bermain" onClick={() => navigate('/game')} />
-          <Button text="➤ Kembali" variant='secondary' onClick={() => navigate('/')} />
-      </div>
+      {showPopup && (
+        <div
+          className={`absolute bottom-72 right-10 bg-white text-black px-4 py-2 rounded shadow-lg z-20 transition-opacity duration-500 ease-in-out ${
+            fadeOut ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          Yuk main! Kamu pasti bisa!!!
+        </div>
+      )}
+      <Character onClick={handleCharClick} position="bottom-right" size="large" />
+      <SandBackground />
     </div>
   );
 };

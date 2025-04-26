@@ -8,8 +8,8 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ text, onClick, variant = 'primary', size = 'w-1/3' }) => {
-  const baseStyle = "px-6 py-2 text-lg font-semibold rounded-3xl transition";
-  const primary = "bg-white hover:bg-blue-600 text-blue-500 hover:text-white shadow-lg border border-blue-500 border-2";
+  const baseStyle = "px-4 py-3 text-lg font-extrabold rounded-xl transition  shadow-lg border-b-4 border-r-4 border-[#FF8A00] bg-clip-border hover:scale-110";
+  const primary = "bg-gradient-to-bl from-[#F9BB06] to-[#E98D0E] hover:bg-rd-secondary text-white hover:text-white";
   const secondary = "bg-white text-blue-500 border border-blue-500 hover:bg-blue-100";
 
   return (

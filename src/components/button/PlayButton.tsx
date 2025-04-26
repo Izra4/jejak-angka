@@ -18,7 +18,7 @@ export default function PlayButton({ size = 64, onClick = () => {}, className = 
   return (
     <button
       onClick={onClick}
-      className={`group relative flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${className}`}
+      className={`group relative flex items-center justify-center rounded-full transition-all duration-300 hover:scale-105 active:scale-95 ${className} bg-sky-300/50`}
       style={{
         width: size,
         height: size,
