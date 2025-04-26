@@ -1,5 +1,5 @@
 import React from "react";
-import sand from "../assets/images/sand.png";
+import sand from "../../assets/images/sand.png";
 
 const SandBackground: React.FC = () => {
   return (

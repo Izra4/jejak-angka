@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BackButton from "../components/BackButton";
-import ChalkBoard from "../components/ChalkBoard";
-import Character from "../components/Character";
-import SandBackground from "../components/SandBackground";
+import BackButton from "../components/ui/BackButton";
+import ChalkBoard from "../components/layout/ChalkBoard";
+import Character from "../components/ui/Character";
+import SandBackground from "../components/layout/SandBackground";
 import Button from "../components/button/Button";
 
 const InstructionsPage: React.FC = () => {

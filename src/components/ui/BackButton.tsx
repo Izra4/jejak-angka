@@ -1,5 +1,5 @@
 import React from "react";
-import back from "../assets/icons/back.png";
+import back from "../../assets/icons/back.png";
 
 interface BackButtonProps {
   onClick: () => void;
