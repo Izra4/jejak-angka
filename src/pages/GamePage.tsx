@@ -5,6 +5,7 @@ import { levelPatterns } from "../data/patterns";
 import GameGrid from "../components/grid/GameGrid";
 import GameInfo from "../components/game/GameInfo";
 import GameFooter from "../components/game/GameFooter";
+import BackButton from "../components/ui/BackButton";
 
 const GRID_SIZE = 10;
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
@@ -13,6 +14,8 @@ const GamePage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const level = location.state?.level || 1;
+  const initScore = location.state?.initScore || 0;
+  const hp = location.state?.hp || 4;
   const pattern = levelPatterns[level] || levelPatterns[1];
   const count = pattern.length;
 
@@ -53,25 +56,25 @@ const GamePage: React.FC = () => {
     setGridNumbers(grid);
     setCorrectOrder(ordered);
     setCurrentIndex(0);
-    setScore(0);
-    setLives(4);
+    setScore(initScore);
+    setLives(hp);
     setSelectedCoords([]);
-  }, [count, level, pattern]);
+  }, [count, hp, initScore, level, pattern]);
 
   useEffect(() => {
     if (currentIndex === correctOrder.length && correctOrder.length > 0) {
       setTimeout(() => {
         navigate("/result", {
-          state: { score, success: true, level },
+          state: { score, success: true, level, hp:lives },
         });
       }, 1500);
     }
-  }, [currentIndex, correctOrder, navigate, score, level]);
+  }, [currentIndex, correctOrder, navigate, score, level, lives]);
 
   const showTempPopup = (type: "success" | "error", message: string) => {
     setFeedback({ type, message });
     setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 1200);
+    setTimeout(() => setShowPopup(false), 2000);
   };
 
   const handleCellClick = (num: number, event: React.MouseEvent) => {
@@ -88,23 +91,28 @@ const GamePage: React.FC = () => {
         },
       ]);
 
-      if (currentIndex === 0) {
-        showTempPopup("success", "✅ Awal yang baik! Lanjutkan!");
-      }
-
+      showTempPopup("success", "✅ WOWWW ✅\nKamu Menemukan angka yang lebih besar dari sebelumnya, lanjutkan !!!");
       setCurrentIndex((prev) => prev + 1);
       setScore((prev) => prev + 10);
     } else {
-      setLives((prev) => {
-        const newLives = prev - 1;
-        if (newLives <= 0) {
-          setTimeout(() => navigate("/result", { state: { score, success: false } }), 1200);
-        }
-        return newLives;
-      });
-
-      setScore((prev) => prev - 5);
-      showTempPopup("error", "❌ Salah angka! Coba lagi ya!");
+      if (currentIndex === 0) {
+        showTempPopup("error", "❌ Ooops ❌\nPilih yang bewarna hijau dulu ya!");
+      } else {
+        setLives((prev) => {
+          const newLives = prev - 1;
+          if (newLives <= 0) {
+            setTimeout(() => navigate("/result", { state: { score, success: false } }), 1200);
+          }
+          return newLives;
+        });
+        setScore((prev) => {
+          const newScore = prev - 5;
+          if (newScore < 0) return 0;
+          return newScore;
+        });
+        showTempPopup("error", "❌ Ooops ❌\nAngka tidak besar dari sebelumnya , coba lagi ya !!!");
+      }
+      
     }
   };
 
@@ -139,7 +147,8 @@ const GamePage: React.FC = () => {
       </div>
 
       {/* MOBILE */}
-      <div className="flex flex-col md:hidden w-full p-4 gap-4 items-center">
+      <div className="flex flex-col md:hidden w-full p-4 gap-4">
+        <BackButton onClick={handleBack} />
         <GameInfo
           level={level}
           lives={lives}
