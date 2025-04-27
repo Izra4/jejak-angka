@@ -15,7 +15,6 @@ const ResultPage: React.FC = () => {
   const state = location.state as LocationState;
   const { score, success, level, hp } = state || { score: 0, success: false, level: 1, hp: 0 };
 
-  console.log("ASDASDDAS: ", hp);
 
   return (
     <div className={`min-h-screen font-poppins

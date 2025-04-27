@@ -1,23 +1,28 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { useButtonSound } from "../../utils/ButtonSound";
 
 interface PlayButtonProps {
-  size?: number
-  onClick?: () => void
-  className?: string
+  size?: number;
+  onClick?: () => void;
+  className?: string;
 }
 
 export default function PlayButton({ size = 64, onClick = () => {}, className = "" }: PlayButtonProps) {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
+  const { playSound } = useButtonSound();
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        playSound();
+        onClick?.();
+      }}
       className={`
         group relative flex items-center justify-center rounded-full transition-all 
         duration-300 hover:scale-105 active:scale-95 ${className} bg-sky-300/50
@@ -33,7 +38,6 @@ export default function PlayButton({ size = 64, onClick = () => {}, className = 
           boxShadow: "0 0 20px rgba(186, 230, 253, 0.5)",
         }}
       />
-      
       <svg
         className="relative z-10"
         xmlns="http://www.w3.org/2000/svg"
@@ -45,5 +49,5 @@ export default function PlayButton({ size = 64, onClick = () => {}, className = 
         <path d="M8 5v14l11-7z" />
       </svg>
     </button>
-  )
+  );
 }

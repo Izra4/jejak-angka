@@ -7,6 +7,8 @@ import GameInfo from "../components/game/GameInfo";
 import GameFooter from "../components/game/GameFooter";
 import BackButton from "../components/ui/BackButton";
 import MusicToggleButton from "../components/ui/MusicToggle";
+import { CorrectSound } from "../utils/CorrectSound";
+import { WrongSound } from "../utils/WrongSound";
 
 const GRID_SIZE = 10;
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
@@ -34,6 +36,8 @@ const GamePage: React.FC = () => {
   const [lives, setLives] = useState(4);
   const [selectedCoords, setSelectedCoords] = useState<{ x: number; y: number }[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const { playCorrectSound } = CorrectSound();
+  const {playWrongSound} = WrongSound();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -89,6 +93,7 @@ const GamePage: React.FC = () => {
     const containerRect = ref?.getBoundingClientRect();
 
     if (num === correctOrder[currentIndex] && containerRect) {
+      playCorrectSound();
       const rect = (event.target as HTMLElement).getBoundingClientRect();
       setSelectedCoords((prev) => [
         ...prev,
@@ -102,6 +107,7 @@ const GamePage: React.FC = () => {
       setCurrentIndex((prev) => prev + 1);
       setScore((prev) => prev + 10);
     } else {
+      playWrongSound();
       if (currentIndex === 0) {
         showTempPopup("error", "❌ Ooops ❌\nPilih yang bewarna hijau dulu ya!");
       } else {
@@ -186,3 +192,4 @@ const GamePage: React.FC = () => {
 };
 
 export default GamePage;
+
