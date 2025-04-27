@@ -13,7 +13,8 @@ interface GameGridProps {
   currentIndex: number;
   selectedCoords: Coord[];
   level: number;
-  onClick: (num: number, e: React.MouseEvent) => void;
+  onClick: (num: number, e: React.MouseEvent, index: number) => void;
+  wrongClickedIndex: number | null;
 }
 
 const GameGrid: React.FC<GameGridProps> = ({
@@ -24,6 +25,7 @@ const GameGrid: React.FC<GameGridProps> = ({
   selectedCoords,
   level,
   onClick,
+  wrongClickedIndex,
 }) => {
   const renderSVG = (coords: Coord[]) => (
     <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
@@ -59,7 +61,7 @@ const GameGrid: React.FC<GameGridProps> = ({
             opacity="0.8"
           />
         </>
-)}
+      )}
     </svg>
   );
 
@@ -73,7 +75,8 @@ const GameGrid: React.FC<GameGridProps> = ({
             number={num}
             isStart={num === correctOrder[0]}
             isSelected={correctOrder.includes(num) && correctOrder.indexOf(num) < currentIndex}
-            onClick={(e) => onClick(num, e)}
+            isWrong={wrongClickedIndex === i}
+            onClick={(e) => onClick(num, e, i)}
           />
         ))}
       </div>

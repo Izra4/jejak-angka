@@ -28,16 +28,16 @@ const GamePage: React.FC = () => {
   const [gridNumbers, setGridNumbers] = useState<number[]>([]);
   const [correctOrder, setCorrectOrder] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(
-    null
-  );
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(4);
   const [selectedCoords, setSelectedCoords] = useState<{ x: number; y: number }[]>([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [wrongClickedIndex, setWrongClickedIndex] = useState<number | null>(null);
+
   const { playCorrectSound } = CorrectSound();
-  const {playWrongSound} = WrongSound();
+  const { playWrongSound } = WrongSound();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -48,35 +48,43 @@ const GamePage: React.FC = () => {
   useEffect(() => {
     const start = level === 1 ? 8000 : level === 2 ? 7000 : 5000;
     const ordered = Array.from({ length: count }, (_, i) => start + i);
-
-    const minStart = level === 1 ? 8000 : level === 2 ? 7000 : 5000;
+  
+    const minStart = start;
     const maxRange = 9999;
-
+  
+    const usedNumbers = new Set<number>(ordered);
     const uniqueNumbers = new Set<number>();
+  
     while (uniqueNumbers.size < TOTAL_CELLS) {
       const randomNum = Math.floor(Math.random() * (maxRange - minStart + 1)) + minStart;
-      uniqueNumbers.add(randomNum);
+      if (!usedNumbers.has(randomNum)) {
+        uniqueNumbers.add(randomNum);
+      }
     }
+  
     const grid = Array.from(uniqueNumbers);
-
+  
+    // Sekarang inject angka pattern ke posisi yang bener
     pattern.forEach((point, i) => {
       const index = point.row * GRID_SIZE + point.col;
       grid[index] = ordered[i];
     });
-
+  
     setGridNumbers(grid);
     setCorrectOrder(ordered);
     setCurrentIndex(0);
     setScore(initScore);
     setLives(hp);
     setSelectedCoords([]);
+    setWrongClickedIndex(null);
   }, [count, hp, initScore, level, pattern]);
+  
 
   useEffect(() => {
     if (currentIndex === correctOrder.length && correctOrder.length > 0) {
       setTimeout(() => {
         navigate("/result", {
-          state: { score, success: true, level, hp:lives },
+          state: { score, success: true, level, hp: lives },
         });
       }, 1500);
     }
@@ -88,7 +96,7 @@ const GamePage: React.FC = () => {
     setTimeout(() => setShowPopup(false), 2000);
   };
 
-  const handleCellClick = (num: number, event: React.MouseEvent) => {
+  const handleCellClick = (num: number, event: React.MouseEvent, index: number) => {
     const ref = isMobile ? mobileRef.current : desktopRef.current;
     const containerRect = ref?.getBoundingClientRect();
 
@@ -108,6 +116,9 @@ const GamePage: React.FC = () => {
       setScore((prev) => prev + 10);
     } else {
       playWrongSound();
+      setWrongClickedIndex(index);
+      setTimeout(() => setWrongClickedIndex(null), 2000);
+
       if (currentIndex === 0) {
         showTempPopup("error", "❌ Ooops ❌\nPilih yang bewarna hijau dulu ya!");
       } else {
@@ -125,7 +136,6 @@ const GamePage: React.FC = () => {
         });
         showTempPopup("error", "❌ Ooops ❌\nAngka tidak besar dari sebelumnya , coba lagi ya !!!");
       }
-      
     }
   };
 
@@ -135,9 +145,9 @@ const GamePage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-200 to-[#AFEEEE] font-poppins text-black">
       {/* DESKTOP */}
       <div className="hidden md:flex flex-row w-full h-full p-6">
-      <div className="flex flex-col items-center space-y-3">
-          <BackButton onClick={handleBack} absolute={false}/>
-          <MusicToggleButton absolute={false}/>
+        <div className="flex flex-col items-center space-y-3">
+          <BackButton onClick={handleBack} absolute={false} />
+          <MusicToggleButton absolute={false} />
         </div>
         <div className="w-3/5">
           <GameGrid
@@ -148,17 +158,11 @@ const GamePage: React.FC = () => {
             selectedCoords={selectedCoords}
             level={level}
             onClick={handleCellClick}
+            wrongClickedIndex={wrongClickedIndex}
           />
         </div>
-
         <div className="w-2/5 flex flex-col justify-between">
-          <GameInfo
-            level={level}
-            lives={lives}
-            score={score}
-            current={currentIndex}
-            total={correctOrder.length}
-          />
+          <GameInfo level={level} lives={lives} score={score} current={currentIndex} total={correctOrder.length} />
           <GameFooter feedback={feedback} show={showPopup} onBack={handleBack} />
         </div>
       </div>
@@ -167,15 +171,9 @@ const GamePage: React.FC = () => {
       <div className="flex flex-col md:hidden w-full p-4 gap-4">
         <div className="flex flex-row space-x-3">
           <BackButton onClick={handleBack} />
-          <MusicToggleButton absolute={false}/>
+          <MusicToggleButton absolute={false} />
         </div>
-        <GameInfo
-          level={level}
-          lives={lives}
-          score={score}
-          current={currentIndex}
-          total={correctOrder.length}
-        />
+        <GameInfo level={level} lives={lives} score={score} current={currentIndex} total={correctOrder.length} />
         <GameGrid
           refProp={mobileRef}
           gridNumbers={gridNumbers}
@@ -184,6 +182,7 @@ const GamePage: React.FC = () => {
           selectedCoords={selectedCoords}
           level={level}
           onClick={handleCellClick}
+          wrongClickedIndex={wrongClickedIndex}
         />
         <GameFooter feedback={feedback} show={showPopup} onBack={handleBack} />
       </div>
@@ -192,4 +191,3 @@ const GamePage: React.FC = () => {
 };
 
 export default GamePage;
-

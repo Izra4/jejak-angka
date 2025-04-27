@@ -18,7 +18,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(
     }
 
     if (isWrong) {
-      bgColor = "bg-red-300";
+      bgColor = "bg-red-200";
       borderColor = "border-red-400";
     }
 
