@@ -20,7 +20,7 @@ const InstructionsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen lg:h-screen bg-[#AFEEEE] flex flex-col lg:flex-row p-6 font-poppins relative overflow-hidden lg:justify-center">
-      <BackButton onClick={() => navigate("/")} />
+      <BackButton absolute={true} onClick={() => navigate("/")} />
       <div className="w-full max-w-2xl">
         <ChalkBoard />
         <div className="flex justify-center items-center mt-6 lg:mt-8 z-30 relative">

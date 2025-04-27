@@ -6,6 +6,7 @@ import GameGrid from "../components/grid/GameGrid";
 import GameInfo from "../components/game/GameInfo";
 import GameFooter from "../components/game/GameFooter";
 import BackButton from "../components/ui/BackButton";
+import MusicToggleButton from "../components/ui/MusicToggle";
 
 const GRID_SIZE = 10;
 const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
@@ -44,9 +45,15 @@ const GamePage: React.FC = () => {
     const start = level === 1 ? 8000 : level === 2 ? 7000 : 5000;
     const ordered = Array.from({ length: count }, (_, i) => start + i);
 
-    const grid = Array.from({ length: TOTAL_CELLS }, () =>
-      Math.floor(Math.random() * (9999 - 1000) + 1000)
-    );
+    const minStart = level === 1 ? 8000 : level === 2 ? 7000 : 5000;
+    const maxRange = 9999;
+
+    const uniqueNumbers = new Set<number>();
+    while (uniqueNumbers.size < TOTAL_CELLS) {
+      const randomNum = Math.floor(Math.random() * (maxRange - minStart + 1)) + minStart;
+      uniqueNumbers.add(randomNum);
+    }
+    const grid = Array.from(uniqueNumbers);
 
     pattern.forEach((point, i) => {
       const index = point.row * GRID_SIZE + point.col;
@@ -121,7 +128,11 @@ const GamePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 to-[#AFEEEE] font-poppins text-black">
       {/* DESKTOP */}
-      <div className="hidden md:flex flex-row w-full h-full p-6 gap-6">
+      <div className="hidden md:flex flex-row w-full h-full p-6">
+      <div className="flex flex-col items-center space-y-3">
+          <BackButton onClick={handleBack} absolute={false}/>
+          <MusicToggleButton absolute={false}/>
+        </div>
         <div className="w-3/5">
           <GameGrid
             refProp={desktopRef}
@@ -148,7 +159,10 @@ const GamePage: React.FC = () => {
 
       {/* MOBILE */}
       <div className="flex flex-col md:hidden w-full p-4 gap-4">
-        <BackButton onClick={handleBack} />
+        <div className="flex flex-row space-x-3">
+          <BackButton onClick={handleBack} />
+          <MusicToggleButton absolute={false}/>
+        </div>
         <GameInfo
           level={level}
           lives={lives}

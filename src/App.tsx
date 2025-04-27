@@ -4,10 +4,12 @@ import HomePage from './pages/HomePage';
 import InstructionsPage from './pages/IntructionsPage';
 import GamePage from './pages/GamePage';
 import ResultPage from './pages/ResultPage';
+import { MusicProvider } from './utils/MusicContext';
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <MusicProvider>
+      <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/instructions" element={<InstructionsPage />} />
@@ -15,6 +17,7 @@ const App: React.FC = () => {
         <Route path="/result" element={<ResultPage />} />
       </Routes>
     </Router>
+    </MusicProvider>
   );
 };
 
