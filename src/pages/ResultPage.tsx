@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../components/button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { YeaySound } from "../utils/YeaySound";
+import { FailSound } from "../utils/FailSound copy";
 
 interface LocationState {
   score: number;
@@ -14,7 +16,17 @@ const ResultPage: React.FC = () => {
   const location = useLocation();
   const state = location.state as LocationState;
   const { score, success, level, hp } = state || { score: 0, success: false, level: 1, hp: 0 };
+  const { yeaySound } = YeaySound();
+  const { failSound } = FailSound();
 
+  useEffect(() => {
+    if (success) {
+      yeaySound();
+    } else {
+      failSound();
+
+    }
+  }, [failSound, success, yeaySound]);
 
   return (
     <div className={`min-h-screen font-poppins
